@@ -1,0 +1,10 @@
+{% extends 'device/base.html' %}
+
+{% block content %}
+    <h3>Here are the list of Nurses:</h3>
+    <ul>
+    {% for nurse in nurse_list %}
+        <li>{{ nurse.last_name }}, {{ nurse.first_name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

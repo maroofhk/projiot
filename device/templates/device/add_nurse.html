@@ -1,0 +1,9 @@
+{% extends 'device/base.html' %}
+
+{% block content %}
+    <h3>Add new Nurse</h3><br />
+    <form method= "Post" action="">{% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary" type='submit' value='Nurse'>Submit</button>
+    </form>
+{% endblock content %}

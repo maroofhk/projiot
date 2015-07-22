@@ -1,0 +1,9 @@
+{% extends 'device/base.html' %}
+
+{% block content %}
+<select>
+    {% for nurse in nurse_list %}
+      <option value="">{{ nurse.last_name }}, {{ nurse.first_name }}</option>
+    {% endfor %}
+</select>
+{% endblock content %}

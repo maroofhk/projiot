@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Project IoT</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    <style>
+    body {
+  	    padding-top: 40px;
+  	    padding-bottom: 0px;
+	  }
+    .jumbotron {
+        padding: 5px 0;
+    }
+
+    #map-canvas {
+        width: 73%;
+        height: 320px;
+        margin: 0 auto 0 auto;
+    }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9sQT-p7oOPiM-EssyaWovAEdg0Ag5dqs&sensor=false"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <!--<nav>-->
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project IoT</a>
+        </div>
+        <!--<div id="navbar" class="navbar-collapse collapse">-->
+        <!--  <form class="navbar-form navbar-right">-->
+        <!--    <div class="form-group">-->
+        <!--      <input type="text" placeholder="Username" class="form-control">-->
+        <!--    </div>-->
+        <!--    <div class="form-group">-->
+        <!--      <input type="password" placeholder="Password" class="form-control">-->
+        <!--    </div>-->
+        <!--    <button type="submit" class="btn btn-success">Sign in</button>-->
+        <!--  </form>-->
+        <!--</div>-->
+        
+        <div id="navbar" class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right" method="post" action=".?next={{ redirect_to }}"> {% csrf_token %}
+            <div class="form-group">
+              <input type="text" name="username" placeholder="Username" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success" value="Login">Sign in</button>
+          </form>
+        </div>
+        
+        
+        
+        <!--/.navbar-collapse -->
+      </div>
+    </nav>
+    
+    <nav>
+    <div class="container">
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="https://projiot-maroofhk.c9.io">Home</a></li>
+        <!--<li role="presentation" class="active"><a href="devices/home">Home</a></li>-->
+        
+        <li role="presentation" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            Devices <span class="caret"></span>
+          </a>
+              <ul class="dropdown-menu">
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io/devices/">List Devices</a></li>
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io">Add Device</a></li>
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io/devices/all/">Device API GET</a></a></li>
+              </ul>
+        </li>
+        
+        <li role="presentation" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            Nurses <span class="caret"></span>
+          </a>
+              <ul class="dropdown-menu">
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io/devices/">View Nurses</a></li>
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io/nurse/add/">Add New Nurse</a></li>
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io/nurses/all/">Nurse API GET</a></a></li>
+              </ul>
+        </li>
+        
+        <li role="presentation" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            Doctors <span class="caret"></span>
+          </a>
+              <ul class="dropdown-menu">
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io/devices/">View Doctors</a></li>
+                <li role="presentation"><a href="https://projiot-maroofhk.c9.io">Add New Doctor</a></li>
+              </ul>
+        </li>
+        
+      </ul>
+    </div>
+    </nav>
+    
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h2>Kaiser Permanente IoT Dashboard</h2>
+        <p>Access portal to Interconnected devices with Kaiser personel for a more connected ecosystem.</p>
+        <p><a class="btn btn-primary" href="#" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+    
+    <div class="containerMaps">
+      <div id="map-canvas"></div>
+    </div>
+    
+    <div class="container">
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    
+    <div class="container">
+      <hr>
+      <footer>
+        <p>&copy; Ontos & Co., 2015</p>
+      </footer>
+    </div> <!-- /container -->
+    
+    <script>
+      function initialize() {
+        var map;
+        var options = {
+          center: {
+            lat: 39.011902,
+            lng: -98.484247
+          },
+          zoom: 3,
+          disableDefaultUI: false,
+          scrollwheel: false,
+          draggable: true,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          maxZoom: 5,
+          minZoom:3,
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.LEFT_BOTTOM,
+            style: google.maps.ZoomControlStyle.DEFAULT
+          },
+          panControlOptions: {
+            position: google.maps.ControlPosition.BOTTOM_LEFT
+          }
+        };
+    
+        element = document.getElementById('map-canvas');
+        map = new google.maps.Map(element, options);        
+        
+        var locationArray = new Array('Oregon [8/12 active]', 'Northern Cal. [22/144 active]', 'Southern Cal. [96/125 active]', 'Colorado [693/856 active]',
+        'Southern Colorado [45/65 active]', 'Georgia [9/65 active]', 'Hawaii [2/8 active]', 'Maryland [8/31 active]', 'Virginia [7/17 active]', 'Washington DC [87/369 active]'
+        );
+    
+        var LatArray = new Array(45.522894,37.662431,33.953349,39.739154,38.254447,
+        33.748995,21.306944,39.045755,37.431573,38.895112
+        );
+    
+        var LongArray = new Array(-122.989827,-121.874679,-117.396616,-104.984703,
+        -104.609141,-84.387982,-157.858333,-76.641271,-78.656894,-77.036366
+        );
+
+        for (var i = 0; i < 9; i++) {
+          var position = new google.maps.LatLng(
+            LatArray[i],
+            LongArray[i]
+          );
+
+          var marker = new google.maps.Marker({
+            position: position,
+            //map: map
+          });
+
+          marker.setMap(map);
+
+          marker.setTitle(locationArray[i]);
+          var infowindow = new google.maps.InfoWindow({
+            content: locationArray[i]
+          });
+
+          google.maps.event.addListener(marker, 'click', function(content) {
+            return function() {
+              infowindow.setContent(content);
+              infowindow.open(map, this);
+            }
+          }(locationArray[i]));
+        } // end of loop over location indices
+      } // end of initialization function
+  
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</body>
+</html>
